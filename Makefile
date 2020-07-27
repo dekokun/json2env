@@ -1,6 +1,6 @@
 VERSION = $(shell godzil show-version)
 CURRENT_REVISION = $(shell git rev-parse --short HEAD)
-BUILD_LDFLAGS = "-s -w -X github.com/dekokun/json2env2.revision=$(CURRENT_REVISION)"
+BUILD_LDFLAGS = "-s -w -X github.com/dekokun/json2env.revision=$(CURRENT_REVISION)"
 u := $(if $(update),-u)
 
 export GO111MODULE=on
@@ -31,11 +31,11 @@ lint: devel-deps
 
 .PHONY: build
 build:
-	go build -ldflags=$(BUILD_LDFLAGS) ./cmd/json2env2
+	go build -ldflags=$(BUILD_LDFLAGS) ./cmd/json2env
 
 .PHONY: install
 install:
-	go install -ldflags=$(BUILD_LDFLAGS) ./cmd/json2env2
+	go install -ldflags=$(BUILD_LDFLAGS) ./cmd/json2env
 
 .PHONY: release
 release: devel-deps

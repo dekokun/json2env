@@ -1,3 +1,3 @@
-module github.com/dekokun/json2env2
+module github.com/dekokun/json2env
 
 go 1.13

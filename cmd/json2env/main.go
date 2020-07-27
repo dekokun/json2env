@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dekokun/json2env2"
+	json2env2 "github.com/dekokun/json2env"
 )
 
 func main() {
