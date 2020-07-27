@@ -11,7 +11,7 @@ import (
 
 func main() {
 	log.SetFlags(0)
-	err := json2env2.Run(context.Background(), os.Args[1:], os.Stdout, os.Stderr)
+	err := json2env2.Run(context.Background(), os.Args[1:], os.Stdout, os.Stderr, os.Stdin)
 	if err != nil && err != flag.ErrHelp {
 		log.Println(err)
 		exitCode := 1
