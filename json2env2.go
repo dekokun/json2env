@@ -17,12 +17,16 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer) err
 		fmt.Sprintf("%s (v%s rev:%s)", cmdName, version, revision), flag.ContinueOnError)
 	fs.SetOutput(errStream)
 	ver := fs.Bool("version", false, "display version")
+	// write flag setting
+
 	if err := fs.Parse(argv); err != nil {
 		return err
 	}
 	if *ver {
 		return printVersion(outStream)
 	}
+	// write implementation
+
 	return nil
 }
 
