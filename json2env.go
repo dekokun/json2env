@@ -1,4 +1,4 @@
-package json2env2
+package json2env
 
 import (
 	"context"
