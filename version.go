@@ -1,4 +1,4 @@
-package json2env2
+package json2env
 
 const version = "0.0.0"
 
