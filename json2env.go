@@ -1,8 +1,8 @@
 package json2env2
 
 import (
-	"bufio"
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -26,13 +26,12 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	if *ver {
 		return printVersion(outStream)
 	}
-	// write implementation
-	stdin := bufio.NewScanner(inStream)
-	input := ""
-	for stdin.Scan() {
-		input += stdin.Text()
+	var envJSON interface{}
+	err := json.NewDecoder(inStream).Decode(&envJSON)
+	if err != nil {
+		return err
 	}
-	fmt.Fprint(outStream, input)
+	fmt.Fprint(outStream, envJSON)
 
 	return nil
 }
