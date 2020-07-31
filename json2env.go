@@ -9,9 +9,9 @@ import (
 	"log"
 )
 
-const cmdName = "json2env2"
+const cmdName = "json2env"
 
-// Run the json2env2
+// Run the json2env
 func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inStream io.Reader) error {
 	log.SetOutput(errStream)
 	fs := flag.NewFlagSet(

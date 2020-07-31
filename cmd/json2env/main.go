@@ -6,12 +6,12 @@ import (
 	"log"
 	"os"
 
-	json2env2 "github.com/dekokun/json2env"
+	json2env "github.com/dekokun/json2env"
 )
 
 func main() {
 	log.SetFlags(0)
-	err := json2env2.Run(context.Background(), os.Args[1:], os.Stdout, os.Stderr, os.Stdin)
+	err := json2env.Run(context.Background(), os.Args[1:], os.Stdout, os.Stderr, os.Stdin)
 	if err != nil && err != flag.ErrHelp {
 		log.Println(err)
 		exitCode := 1

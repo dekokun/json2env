@@ -1,17 +1,17 @@
-json2env2
+json2env
 =======
 
-[![Test Status](https://github.com/dekokun/json2env2/workflows/test/badge.svg?branch=master)][actions]
-[![Coverage Status](https://coveralls.io/repos/dekokun/json2env2/badge.svg?branch=master)][coveralls]
+[![Test Status](https://github.com/dekokun/json2env/workflows/test/badge.svg?branch=master)][actions]
+[![Coverage Status](https://coveralls.io/repos/dekokun/json2env/badge.svg?branch=master)][coveralls]
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
-[![GoDoc](https://godoc.org/github.com/dekokun/json2env2?status.svg)][godoc]
+[![GoDoc](https://godoc.org/github.com/dekokun/json2env?status.svg)][godoc]
 
-[actions]: https://github.com/dekokun/json2env2/actions?workflow=test
-[coveralls]: https://coveralls.io/r/dekokun/json2env2?branch=master
-[license]: https://github.com/dekokun/json2env2/blob/master/LICENSE
-[godoc]: https://godoc.org/github.com/dekokun/json2env2
+[actions]: https://github.com/dekokun/json2env/actions?workflow=test
+[coveralls]: https://coveralls.io/r/dekokun/json2env?branch=master
+[license]: https://github.com/dekokun/json2env/blob/master/LICENSE
+[godoc]: https://godoc.org/github.com/dekokun/json2env
 
-json2env2 short description
+json2env short description
 
 ## Synopsis
 
@@ -24,7 +24,7 @@ json2env2 short description
 ## Installation
 
 ```console
-% go get github.com/dekokun/json2env2
+% go get github.com/dekokun/json2env
 ```
 
 ## Author
