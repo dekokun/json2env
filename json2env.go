@@ -26,7 +26,7 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	if *ver {
 		return printVersion(outStream)
 	}
-	var envJSON interface{}
+	var envJSON map[string]string
 	err := json.NewDecoder(inStream).Decode(&envJSON)
 	if err != nil {
 		return err
@@ -34,6 +34,16 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	fmt.Fprint(outStream, envJSON)
 
 	return nil
+}
+
+func makeNewEnv(origEnv []string, json map[string]string) []string {
+	newEnv := []string{}
+	for key, value := range json {
+		newEnv = append(newEnv, fmt.Sprintf("%s=%s", key, value))
+	}
+	// if same key exists origEnv and newEnv, json parameter overwrite the origEnv
+	newEnv = append(origEnv, newEnv...)
+	return newEnv
 }
 
 func printVersion(out io.Writer) error {
