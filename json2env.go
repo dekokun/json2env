@@ -7,12 +7,16 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os/exec"
+	"syscall"
+
+	"github.com/pkg/errors"
 )
 
 const cmdName = "json2env"
 
 // Run the json2env
-func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inStream io.Reader) error {
+func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inStream io.Reader, env []string) error {
 	log.SetOutput(errStream)
 	fs := flag.NewFlagSet(
 		fmt.Sprintf("%s (v%s rev:%s)", cmdName, version, revision), flag.ContinueOnError)
@@ -29,7 +33,12 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	var envJSON map[string]string
 	err := json.NewDecoder(inStream).Decode(&envJSON)
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "failed to decode input %+s", inStream)
+	}
+	command := []string{"ls"}
+	newEnv := makeNewEnv(env, envJSON)
+	if err := runCommand(command, newEnv); err != nil {
+		return errors.Wrapf(err, "failed to run command %+s", command)
 	}
 	fmt.Fprint(outStream, envJSON)
 
@@ -49,4 +58,12 @@ func makeNewEnv(origEnv []string, json map[string]string) []string {
 func printVersion(out io.Writer) error {
 	_, err := fmt.Fprintf(out, "%s v%s (rev:%s)\n", cmdName, version, revision)
 	return err
+}
+
+func runCommand(command, envVars []string) error {
+	bin, err := exec.LookPath(command[0])
+	if err != nil {
+		return err
+	}
+	return syscall.Exec(bin, command, envVars)
 }
