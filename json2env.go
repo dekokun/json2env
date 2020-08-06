@@ -35,7 +35,7 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	if err != nil {
 		return errors.Wrapf(err, "failed to decode input %+s", inStream)
 	}
-	command := []string{"ls"}
+	command := []string{"env"}
 	newEnv := makeNewEnv(env, envJSON)
 	if err := runCommand(command, newEnv); err != nil {
 		return errors.Wrapf(err, "failed to run command %+s", command)
