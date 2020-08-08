@@ -10,7 +10,7 @@ import (
 
 func TestNormal(t *testing.T) {
 	stdin := bytes.NewBufferString("{}")
-	err := Run(context.Background(), []string{}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+	err := Run(context.Background(), []string{"ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
 	if err != nil {
 		t.Fatalf("failed test %#v", err)
 	}
@@ -18,7 +18,7 @@ func TestNormal(t *testing.T) {
 
 func TestErrorIfNotJson(t *testing.T) {
 	stdin := bytes.NewBufferString("{deadbeaf")
-	err := Run(context.Background(), []string{}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+	err := Run(context.Background(), []string{"ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
 	if err == nil {
 		t.Fatalf("error not occurred, failed test %#v", err)
 	}
