@@ -33,7 +33,12 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	var envJSON map[string]string
 	err := json.NewDecoder(inStream).Decode(&envJSON)
 	if err != nil {
-		return errors.Wrap(err, "failed to decode input")
+		switch err := errors.Cause(err).(type) {
+		case *json.UnmarshalTypeError:
+			return errors.Wrap(err, "failed to decode input, json must be flat key value map, example: {\"key1\":\"value1\", \"key2\":\"value2\"}")
+		default:
+			return errors.Wrap(err, "failed to decode input")
+		}
 	}
 	newEnv := makeNewEnv(env, envJSON)
 	if err := runCommand(command, newEnv, outStream, errStream); err != nil {
