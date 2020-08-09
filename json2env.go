@@ -8,7 +8,6 @@ import (
 	"io"
 	"log"
 	"os/exec"
-	"syscall"
 
 	"github.com/pkg/errors"
 )
@@ -37,10 +36,9 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 		return errors.Wrapf(err, "failed to decode input %+s", inStream)
 	}
 	newEnv := makeNewEnv(env, envJSON)
-	if err := runCommand(command, newEnv); err != nil {
+	if err := runCommand(command, newEnv, outStream, errStream); err != nil {
 		return errors.Wrapf(err, "failed to run command %+s", command)
 	}
-	fmt.Fprint(outStream, envJSON)
 
 	return nil
 }
@@ -60,10 +58,14 @@ func printVersion(out io.Writer) error {
 	return err
 }
 
-func runCommand(command, envVars []string) error {
+func runCommand(command, envVars []string, outStream, errStream io.Writer) error {
 	bin, err := exec.LookPath(command[0])
 	if err != nil {
 		return err
 	}
-	return syscall.Exec(bin, command, envVars)
+	cmd := exec.Command(bin, command[1:]...)
+	cmd.Env = envVars
+	cmd.Stderr = errStream
+	cmd.Stdout = outStream
+	return cmd.Run()
 }
