@@ -24,6 +24,19 @@ func TestErrorIfNotJson(t *testing.T) {
 	}
 }
 
+func TestEnv(t *testing.T) {
+	stdin := bytes.NewBufferString("{\"a\": \"after\"}")
+	var outStream bytes.Buffer
+	err := Run(context.Background(), []string{"env"}, &outStream, &bytes.Buffer{}, stdin, []string{"a=before"})
+	if err != nil {
+		t.Fatalf("failed run %#v", err)
+	}
+	expect := []byte("a=after\n")
+	if !bytes.Equal(outStream.Bytes(), expect) {
+		t.Fatalf("failed expect: %#v, got: %#v", string(expect), string(outStream.Bytes()))
+	}
+}
+
 func TestGetEnv(t *testing.T) {
 	env := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"})
 	sort.Strings(env)
