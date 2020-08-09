@@ -33,7 +33,7 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	var envJSON map[string]string
 	err := json.NewDecoder(inStream).Decode(&envJSON)
 	if err != nil {
-		return errors.Wrapf(err, "failed to decode input")
+		return errors.Wrap(err, "failed to decode input")
 	}
 	newEnv := makeNewEnv(env, envJSON)
 	if err := runCommand(command, newEnv, outStream, errStream); err != nil {
