@@ -24,6 +24,13 @@ func TestErrorIfNotJson(t *testing.T) {
 	}
 }
 
+func TestErrorIfCommandNotExists(t *testing.T) {
+	stdin := bytes.NewBufferString("{deadbeaf")
+	err := Run(context.Background(), []string{}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+	if err == nil {
+		t.Fatalf("error not occurred, failed test %#v", err)
+	}
+}
 func TestEnv(t *testing.T) {
 	stdin := bytes.NewBufferString("{\"a\": \"after\"}")
 	var outStream bytes.Buffer

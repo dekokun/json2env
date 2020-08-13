@@ -27,6 +27,9 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 		return err
 	}
 	command := fs.Args()
+	if len(command) == 0 {
+		return errors.New("you must specify one command name")
+	}
 	if *ver {
 		return printVersion(outStream)
 	}
