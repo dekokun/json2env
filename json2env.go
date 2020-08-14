@@ -19,9 +19,13 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	log.SetOutput(errStream)
 	fs := flag.NewFlagSet(
 		fmt.Sprintf("%s (v%s rev:%s)", cmdName, version, revision), flag.ContinueOnError)
+	fs.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", fs.Name())
+		fmt.Fprintf(flag.CommandLine.Output(), "  echo '{\"key\":\"value\"}' | %s /path/to/command [...]\n\n", cmdName)
+		fs.PrintDefaults()
+	}
 	fs.SetOutput(errStream)
 	ver := fs.Bool("version", false, "display version")
-	// write flag setting
 
 	if err := fs.Parse(argv); err != nil {
 		return err
