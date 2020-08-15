@@ -11,15 +11,17 @@ json2env
 [license]: https://github.com/dekokun/json2env/blob/master/LICENSE
 [godoc]: https://godoc.org/github.com/dekokun/json2env
 
-json2env short description
+json2env execute commands with environment variables made from JSON.
 
 ## Synopsis
 
 ```go
-// simple usage here
+echo '{"key":"value"}' | json2env /path/to/command [...]
 ```
 
 ## Description
+
+
 
 ## Installation
 
