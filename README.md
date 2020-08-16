@@ -16,7 +16,7 @@ json2env execute commands with environment variables made from JSON.
 ## Synopsis
 
 ```go
-echo '{"key":"value"}' | json2env /path/to/command [...]
+$ echo '{"key":"value"}' | json2env /path/to/command [...]
 ```
 
 ## Description
