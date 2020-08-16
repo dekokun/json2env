@@ -21,7 +21,11 @@ $ echo '{"key":"value"}' | json2env /path/to/command [...]
 
 ## Description
 
-
+```go
+$ echo '{"examplekey1":"value1", "examplekey2":"value2"}' | json2env env | grep examplekey
+examplekey1=value1
+examplekey2=value2
+```
 
 ## Installation
 
