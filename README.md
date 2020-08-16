@@ -26,7 +26,7 @@ echo '{"key":"value"}' | json2env /path/to/command [...]
 ## Installation
 
 ```console
-% go get github.com/dekokun/json2env
+$ go get github.com/dekokun/json2env/cmd/json2env
 ```
 
 ## Author
