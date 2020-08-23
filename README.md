@@ -28,8 +28,10 @@ examplekey2=value2
 ## Motivation
 
 I wanted to pass secret information as an environment variable to the ECS container in Fargate via the Secrets Manager, but I was unable to retrieve some data by specifying a key in the JSON of the Secrets Manager as shown below. Of course, you can get the entire JSON as an environment variable.
+
 https://docs.aws.amazon.com/AmazonECS/latest/userguide/specifying-sensitive-data-secrets.html#secrets-considerations
 `It is only supported to inject the full contents of a secret as an environment variable. Specifying a specific JSON key or version is not supported at this time.`
+
 Since this feature is implemented in ECS on EC2, this feature will probably be implemented in Fargate in the future, so I wanted something to convert JSON to environment variables that can be used in the meantime.
 
 ## Installation
