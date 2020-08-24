@@ -26,6 +26,7 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	}
 	fs.SetOutput(errStream)
 	ver := fs.Bool("version", false, "display version")
+	keys := fs.String("keys", "", "conmma separated environment variable names that you want to export")
 
 	if err := fs.Parse(argv); err != nil {
 		return err
@@ -37,6 +38,11 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	if *ver {
 		return printVersion(outStream)
 	}
+
+	if *keys == "" {
+		return errors.New("keys option is required")
+	}
+
 	var envJSON map[string]string
 	err := json.NewDecoder(inStream).Decode(&envJSON)
 	if err != nil {
