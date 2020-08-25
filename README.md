@@ -35,6 +35,8 @@ I wanted to pass secret information as an environment variable to the ECS contai
 
 Since this feature is implemented in ECS on EC2, this feature will probably be implemented in Fargate in the future, so I wanted something to convert JSON to environment variables that can be used in the meantime.
 
+And I made it mandatory to specify the name of the environment variable to use so that I can safely remove this tool when I no longer use it.
+
 ## Installation
 
 ```console
