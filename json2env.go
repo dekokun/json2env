@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -53,7 +54,11 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 			return errors.Wrap(err, "failed to decode input")
 		}
 	}
-	newEnv := makeNewEnv(env, envJSON)
+
+	newEnv, err := makeNewEnv(env, envJSON, strings.Split(*keys, ","))
+	if err != nil {
+		return errors.Wrapf(err, "failed to create new env")
+	}
 	if err := runCommand(command, newEnv, outStream, errStream); err != nil {
 		return errors.Wrapf(err, "failed to run command %+s", command)
 	}
@@ -61,14 +66,22 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	return nil
 }
 
-func makeNewEnv(origEnv []string, json map[string]string) []string {
+func makeNewEnv(origEnv []string, json map[string]string, envNames []string) ([]string, error) {
 	newEnv := []string{}
-	for key, value := range json {
+	newJSON := make(map[string]string)
+	for _, name := range envNames {
+		value, ok := json[name]
+		if !ok {
+			return newEnv, errors.New(fmt.Sprintf("%s is not exists in json", name))
+		}
+		newJSON[name] = value
+	}
+	for key, value := range newJSON {
 		newEnv = append(newEnv, fmt.Sprintf("%s=%s", key, value))
 	}
 	// if same key exists origEnv and newEnv, json parameter overwrite the origEnv
 	newEnv = append(origEnv, newEnv...)
-	return newEnv
+	return newEnv, nil
 }
 
 func printVersion(out io.Writer) error {
