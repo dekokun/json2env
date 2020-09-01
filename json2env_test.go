@@ -24,6 +24,14 @@ func TestErrorIfNotJson(t *testing.T) {
 	}
 }
 
+func TestErrorIfNestedJson(t *testing.T) {
+	stdin := bytes.NewBufferString("{\"test\": {\"test\": \"test\"}}")
+	err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+	if err == nil {
+		t.Fatalf("error not occurred, failed test")
+	}
+}
+
 func TestErrorIfSpecifyNotExistsKeysJson(t *testing.T) {
 	stdin := bytes.NewBufferString("{\"test\": \"test\"}")
 	err := Run(context.Background(), []string{"-keys", "notExists", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
