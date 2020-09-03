@@ -80,6 +80,13 @@ func TestRun(t *testing.T) {
 			t.Fatalf("error not occurred, failed test %#v", err)
 		}
 	})
+	t.Run("error if command not exists in path", func(t *testing.T) {
+		stdin := bytes.NewBufferString(`{"test": "test"}`)
+		err := Run(context.Background(), []string{"-keys", "test", "notExistsCommand"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+		if err == nil {
+			t.Fatalf("error not occurred, failed test %#v", err)
+		}
+	})
 }
 func TestNotExistedKey(t *testing.T) {
 	_, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"x"})
