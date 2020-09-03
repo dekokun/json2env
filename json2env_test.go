@@ -10,7 +10,7 @@ import (
 
 func TestRun(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
-		stdin := bytes.NewBufferString("{\"test\": \"test\"}")
+		stdin := bytes.NewBufferString(`{"test": "test"}`)
 		err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
 		if err != nil {
 			t.Fatalf("failed test %#v", err)
@@ -41,7 +41,7 @@ func TestRun(t *testing.T) {
 		}
 	})
 	t.Run("override existing environment", func(t *testing.T) {
-		stdin := bytes.NewBufferString("{\"a\": \"after\"}")
+		stdin := bytes.NewBufferString(`{"a": "after"}`)
 		var outStream bytes.Buffer
 		err := Run(context.Background(), []string{"-keys", "a", "env"}, &outStream, &bytes.Buffer{}, stdin, []string{"a=before"})
 		if err != nil {
@@ -60,21 +60,21 @@ func TestRun(t *testing.T) {
 		}
 	})
 	t.Run("error if stdin is nested json", func(t *testing.T) {
-		stdin := bytes.NewBufferString("{\"test\": {\"test\": \"test\"}}")
+		stdin := bytes.NewBufferString(`{"test": {"test": "test"}}`)
 		err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
 		if err == nil {
 			t.Fatalf("error not occurred, failed test")
 		}
 	})
 	t.Run("error if the key in keys option is not exists in json", func(t *testing.T) {
-		stdin := bytes.NewBufferString("{\"test\": \"test\"}")
+		stdin := bytes.NewBufferString(`{"test": "test"}`)
 		err := Run(context.Background(), []string{"-keys", "notExists", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
 		if err == nil {
 			t.Fatalf("error not occurred, failed test")
 		}
 	})
 	t.Run("error if command arg not exists", func(t *testing.T) {
-		stdin := bytes.NewBufferString("{\"test\": \"test\"}")
+		stdin := bytes.NewBufferString(`{"test": "test"}`)
 		err := Run(context.Background(), []string{"-keys", "test"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
 		if err == nil {
 			t.Fatalf("error not occurred, failed test %#v", err)
