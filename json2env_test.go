@@ -37,7 +37,7 @@ func TestRun(t *testing.T) {
 			{
 				Title:       "if stdin is not json",
 				InputParams: []string{"-keys", "test", "ls"},
-				Stdin:       `"{deadbeaf"`,
+				Stdin:       `{deadbeaf`,
 			},
 			{
 				Title:       "if stdin is nested json",
