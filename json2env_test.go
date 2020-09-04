@@ -16,30 +16,6 @@ func TestRun(t *testing.T) {
 			t.Fatalf("failed test %#v", err)
 		}
 	})
-	t.Run("all environment variable check", func(t *testing.T) {
-		env, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"b", "d"})
-		if err != nil {
-			t.Fatalf("failed err:%#v", err)
-		}
-		sort.Strings(env)
-		expect := []string{"a=b", "b=b", "b=c", "d=e"}
-		sort.Strings(expect)
-		if !reflect.DeepEqual(env, expect) {
-			t.Fatalf("failed getEnv test expect: %#v, got: %#v", expect, env)
-		}
-	})
-	t.Run("some environment variable check", func(t *testing.T) {
-		env, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"b"})
-		if err != nil {
-			t.Fatalf("failed err:%#v", err)
-		}
-		sort.Strings(env)
-		expect := []string{"a=b", "b=b", "b=c"}
-		sort.Strings(expect)
-		if !reflect.DeepEqual(env, expect) {
-			t.Fatalf("failed getEnv test expect: %#v, got: %#v", expect, env)
-		}
-	})
 	t.Run("override existing environment", func(t *testing.T) {
 		stdin := bytes.NewBufferString(`{"a": "after"}`)
 		var outStream bytes.Buffer
@@ -93,9 +69,35 @@ func TestRun(t *testing.T) {
 		}
 	})
 }
-func TestNotExistedKey(t *testing.T) {
-	_, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"x"})
-	if err == nil {
-		t.Fatal("failed err")
-	}
+func TestMakeNewEnv(t *testing.T) {
+	t.Run("all environment variable check", func(t *testing.T) {
+		env, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"b", "d"})
+		if err != nil {
+			t.Fatalf("failed err:%#v", err)
+		}
+		sort.Strings(env)
+		expect := []string{"a=b", "b=b", "b=c", "d=e"}
+		sort.Strings(expect)
+		if !reflect.DeepEqual(env, expect) {
+			t.Fatalf("failed getEnv test expect: %#v, got: %#v", expect, env)
+		}
+	})
+	t.Run("some environment variable check", func(t *testing.T) {
+		env, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"b"})
+		if err != nil {
+			t.Fatalf("failed err:%#v", err)
+		}
+		sort.Strings(env)
+		expect := []string{"a=b", "b=b", "b=c"}
+		sort.Strings(expect)
+		if !reflect.DeepEqual(env, expect) {
+			t.Fatalf("failed getEnv test expect: %#v, got: %#v", expect, env)
+		}
+	})
+	t.Run("key does not exist in json", func(t *testing.T) {
+		_, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"x"})
+		if err == nil {
+			t.Fatal("failed err")
+		}
+	})
 }
