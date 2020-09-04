@@ -59,6 +59,11 @@ func TestRun(t *testing.T) {
 				InputParams: []string{"-keys", "test", "notExistsCommand"},
 				Stdin:       `{"test": "test"}`,
 			},
+			{
+				Title:       "if keys option is not provided",
+				InputParams: []string{"ls"},
+				Stdin:       `{"test": "test"}`,
+			},
 		}
 		for _, pattern := range patterns {
 			stdin := bytes.NewBufferString(pattern.Stdin)
