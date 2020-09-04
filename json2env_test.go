@@ -52,39 +52,44 @@ func TestRun(t *testing.T) {
 			t.Fatalf("failed expect: %#v, got: %#v", string(expect), string(outStream.Bytes()))
 		}
 	})
-	t.Run("error if stdin is not json", func(t *testing.T) {
-		stdin := bytes.NewBufferString("{deadbeaf")
-		err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
-		if err == nil {
-			t.Fatalf("error not occurred, failed test")
+	t.Run("check error", func(t *testing.T) {
+		patterns := []struct {
+			Title       string
+			InputParams []string
+			Stdin       string
+		}{
+			{
+				Title:       "if stdin is not json",
+				InputParams: []string{"-keys", "test", "ls"},
+				Stdin:       `"{deadbeaf"`,
+			},
+			{
+				Title:       "if stdin is nested json",
+				InputParams: []string{"-keys", "test", "ls"},
+				Stdin:       `{"test": {"test": "test"}}`,
+			},
+			{
+				Title:       "if the key in keys option is not exists in json",
+				InputParams: []string{"-keys", "notExists", "ls"},
+				Stdin:       `{"test": "test"}`,
+			},
+			{
+				Title:       "if command arg not exists",
+				InputParams: []string{"-keys", "test"},
+				Stdin:       `{"test": "test"}`,
+			},
+			{
+				Title:       "if command not exists in path",
+				InputParams: []string{"-keys", "test", "notExistsCommand"},
+				Stdin:       `{"test": "test"}`,
+			},
 		}
-	})
-	t.Run("error if stdin is nested json", func(t *testing.T) {
-		stdin := bytes.NewBufferString(`{"test": {"test": "test"}}`)
-		err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
-		if err == nil {
-			t.Fatalf("error not occurred, failed test")
-		}
-	})
-	t.Run("error if the key in keys option is not exists in json", func(t *testing.T) {
-		stdin := bytes.NewBufferString(`{"test": "test"}`)
-		err := Run(context.Background(), []string{"-keys", "notExists", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
-		if err == nil {
-			t.Fatalf("error not occurred, failed test")
-		}
-	})
-	t.Run("error if command arg not exists", func(t *testing.T) {
-		stdin := bytes.NewBufferString(`{"test": "test"}`)
-		err := Run(context.Background(), []string{"-keys", "test"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
-		if err == nil {
-			t.Fatalf("error not occurred, failed test %#v", err)
-		}
-	})
-	t.Run("error if command not exists in path", func(t *testing.T) {
-		stdin := bytes.NewBufferString(`{"test": "test"}`)
-		err := Run(context.Background(), []string{"-keys", "test", "notExistsCommand"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
-		if err == nil {
-			t.Fatalf("error not occurred, failed test %#v", err)
+		for _, pattern := range patterns {
+			stdin := bytes.NewBufferString(pattern.Stdin)
+			err := Run(context.Background(), pattern.InputParams, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+			if err == nil {
+				t.Fatalf("error not occurred, failed test.\n Test title: %s", pattern.Title)
+			}
 		}
 	})
 }
