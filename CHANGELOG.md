@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.0.4](https://github.com/dekokun/json2env/compare/v0.0.3...v0.0.4) (2020-09-04)
+
+* more test [#5](https://github.com/dekokun/json2env/pull/5) ([dekokun](https://github.com/dekokun))
+* Add keys option [#4](https://github.com/dekokun/json2env/pull/4) ([dekokun](https://github.com/dekokun))
+* add motivation for this tool. [#3](https://github.com/dekokun/json2env/pull/3) ([dekokun](https://github.com/dekokun))
+
 ## [v0.0.3](https://github.com/dekokun/json2env/compare/v0.0.2...v0.0.3) (2020-08-14)
 
 * add go 1.5 for test target [#2](https://github.com/dekokun/json2env/pull/2) ([dekokun](https://github.com/dekokun))
