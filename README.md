@@ -16,11 +16,11 @@ json2env execute commands with environment variables made from JSON.
 ## Synopsis
 
 ```go
-$ echo '{"key":"value"}' | json2env --keys "key" /path/to/command [...]
+$ export SECRETS='{"key":"value"}'; json2env --input SECRETS --keys "key" /path/to/command [...]
 ```
 
 ```go
-$ echo '{"examplekey1":"value1", "examplekey2":"value2", "examplekey3":"value3"}' | json2env --keys "examplekey1,examplekey2" env | grep examplekey
+$ export VARS='{"examplekey1":"value1", "examplekey2":"value2", "examplekey3":"value3"}'; json2env --keys "examplekey1,examplekey2" --input VARS env | grep examplekey
 examplekey1=value1
 examplekey2=value2
 ```
