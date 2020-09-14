@@ -22,7 +22,7 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 		fmt.Sprintf("%s (v%s rev:%s)", cmdName, version, revision), flag.ContinueOnError)
 	fs.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", fs.Name())
-		fmt.Fprintf(flag.CommandLine.Output(), "  echo '{\"key\":\"value\"}' | %s /path/to/command [...]\n\n", cmdName)
+		fmt.Fprintf(flag.CommandLine.Output(), "  SECRETS='{\"key\":\"value\"}'; %s --input SECRETS --keys \"key\" /path/to/command [...]\n\n", cmdName)
 		fs.PrintDefaults()
 	}
 	fs.SetOutput(errStream)
