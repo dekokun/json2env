@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -16,17 +17,18 @@ import (
 const cmdName = "json2env"
 
 // Run the json2env
-func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inStream io.Reader, env []string) error {
+func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, env []string) error {
 	log.SetOutput(errStream)
 	fs := flag.NewFlagSet(
 		fmt.Sprintf("%s (v%s rev:%s)", cmdName, version, revision), flag.ContinueOnError)
 	fs.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", fs.Name())
-		fmt.Fprintf(flag.CommandLine.Output(), "  SECRETS='{\"key\":\"value\"}'; %s --input SECRETS --keys \"key\" /path/to/command [...]\n\n", cmdName)
+		fmt.Fprintf(flag.CommandLine.Output(), "  SECRETS='{\"key\":\"value\"}'; %s --envname SECRETS --keys \"key\" /path/to/command [...]\n\n", cmdName)
 		fs.PrintDefaults()
 	}
 	fs.SetOutput(errStream)
 	ver := fs.Bool("version", false, "display version")
+	envName := fs.String("envname", "", "input environment variable name")
 	keys := fs.String("keys", "", "conmma separated environment variable names that you want to export")
 
 	if err := fs.Parse(argv); err != nil {
@@ -43,9 +45,13 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, inS
 	if *keys == "" {
 		return errors.New("keys option is required")
 	}
+	if *envName == "" {
+		return errors.New("envname option is required")
+	}
 
+	inputJSON := os.Getenv(*envName)
 	var envJSON map[string]string
-	err := json.NewDecoder(inStream).Decode(&envJSON)
+	err := json.Unmarshal([]byte(inputJSON), &envJSON)
 	if err != nil {
 		switch err := errors.Cause(err).(type) {
 		case *json.UnmarshalTypeError:

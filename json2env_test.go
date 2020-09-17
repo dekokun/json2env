@@ -11,7 +11,7 @@ import (
 func TestRun(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
 		stdin := bytes.NewBufferString(`{"test": "test"}`)
-		err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+		err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, []string{})
 		if err != nil {
 			t.Fatalf("failed test %#v", err)
 		}
@@ -19,7 +19,7 @@ func TestRun(t *testing.T) {
 	t.Run("override existing environment", func(t *testing.T) {
 		stdin := bytes.NewBufferString(`{"a": "after"}`)
 		var outStream bytes.Buffer
-		err := Run(context.Background(), []string{"-keys", "a", "env"}, &outStream, &bytes.Buffer{}, stdin, []string{"a=before"})
+		err := Run(context.Background(), []string{"-keys", "a", "env"}, &outStream, &bytes.Buffer{}, []string{"a=before"})
 		if err != nil {
 			t.Fatalf("failed run %#v", err)
 		}
@@ -67,7 +67,7 @@ func TestRun(t *testing.T) {
 		}
 		for _, pattern := range patterns {
 			stdin := bytes.NewBufferString(pattern.Stdin)
-			err := Run(context.Background(), pattern.InputParams, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+			err := Run(context.Background(), pattern.InputParams, &bytes.Buffer{}, &bytes.Buffer{}, []string{})
 			if err == nil {
 				t.Fatalf("error not occurred, failed test.\n Test title: %s", pattern.Title)
 			}
