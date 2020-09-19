@@ -3,6 +3,7 @@ package json2env
 import (
 	"bytes"
 	"context"
+	"os"
 	"reflect"
 	"sort"
 	"testing"
@@ -10,22 +11,22 @@ import (
 
 func TestRun(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
-		stdin := bytes.NewBufferString(`{"test": "test"}`)
-		err := Run(context.Background(), []string{"-keys", "test", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+		os.Setenv("TEST", `{"test": "test"}`)
+		err := Run(context.Background(), []string{"-keys", "test", "-envname", "TEST", "ls"}, &bytes.Buffer{}, &bytes.Buffer{}, []string{})
 		if err != nil {
-			t.Fatalf("failed test %#v", err)
+			t.Errorf("failed test %#v", err)
 		}
 	})
 	t.Run("override existing environment", func(t *testing.T) {
-		stdin := bytes.NewBufferString(`{"a": "after"}`)
+		os.Setenv("TEST", `{"a": "after"}`)
 		var outStream bytes.Buffer
-		err := Run(context.Background(), []string{"-keys", "a", "env"}, &outStream, &bytes.Buffer{}, stdin, []string{"a=before"})
+		err := Run(context.Background(), []string{"-keys", "a", "-envname", "TEST", "env"}, &outStream, &bytes.Buffer{}, []string{"a=before"})
 		if err != nil {
-			t.Fatalf("failed run %#v", err)
+			t.Errorf("failed run %#v", err)
 		}
 		expect := []byte("a=after\n")
 		if !bytes.Equal(outStream.Bytes(), expect) {
-			t.Fatalf("failed expect: %#v, got: %#v", string(expect), string(outStream.Bytes()))
+			t.Errorf("failed expect: %#v, got: %#v", string(expect), string(outStream.Bytes()))
 		}
 	})
 	t.Run("check error", func(t *testing.T) {
@@ -36,40 +37,45 @@ func TestRun(t *testing.T) {
 		}{
 			{
 				Title:       "if stdin is not json",
-				InputParams: []string{"-keys", "test", "ls"},
+				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
 				Stdin:       `{deadbeaf`,
 			},
 			{
 				Title:       "if stdin is nested json",
-				InputParams: []string{"-keys", "test", "ls"},
+				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
 				Stdin:       `{"test": {"test": "test"}}`,
 			},
 			{
 				Title:       "if the key in keys option is not exists in json",
-				InputParams: []string{"-keys", "notExists", "ls"},
+				InputParams: []string{"-keys", "notExists", "-envname", "TEST", "ls"},
 				Stdin:       `{"test": "test"}`,
 			},
 			{
 				Title:       "if command arg not exists",
-				InputParams: []string{"-keys", "test"},
+				InputParams: []string{"-keys", "test", "-envname", "TEST"},
 				Stdin:       `{"test": "test"}`,
 			},
 			{
 				Title:       "if command not exists in path",
-				InputParams: []string{"-keys", "test", "notExistsCommand"},
+				InputParams: []string{"-keys", "test", "-envname", "TEST", "notExistsCommand"},
 				Stdin:       `{"test": "test"}`,
 			},
 			{
 				Title:       "if keys option is not provided",
-				InputParams: []string{"ls"},
+				InputParams: []string{"-envname", "TEST", "ls"},
+				Stdin:       `{"test": "test"}`,
+			},
+			{
+				Title:       "if envname option is not exists",
+				InputParams: []string{"-keys", "test", "ls"},
 				Stdin:       `{"test": "test"}`,
 			},
 		}
 		for _, pattern := range patterns {
-			stdin := bytes.NewBufferString(pattern.Stdin)
-			err := Run(context.Background(), pattern.InputParams, &bytes.Buffer{}, &bytes.Buffer{}, stdin, []string{})
+			os.Setenv("TEST", pattern.Stdin)
+			err := Run(context.Background(), pattern.InputParams, &bytes.Buffer{}, &bytes.Buffer{}, []string{})
 			if err == nil {
-				t.Fatalf("error not occurred, failed test.\n Test title: %s", pattern.Title)
+				t.Errorf("error not occurred, failed test.\n Test title: %s", pattern.Title)
 			}
 		}
 	})
@@ -78,25 +84,25 @@ func TestMakeNewEnv(t *testing.T) {
 	t.Run("all environment variable check", func(t *testing.T) {
 		env, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"b", "d"})
 		if err != nil {
-			t.Fatalf("failed err:%#v", err)
+			t.Errorf("failed err:%#v", err)
 		}
 		sort.Strings(env)
 		expect := []string{"a=b", "b=b", "b=c", "d=e"}
 		sort.Strings(expect)
 		if !reflect.DeepEqual(env, expect) {
-			t.Fatalf("failed getEnv test expect: %#v, got: %#v", expect, env)
+			t.Errorf("failed getEnv test expect: %#v, got: %#v", expect, env)
 		}
 	})
 	t.Run("some environment variable check", func(t *testing.T) {
 		env, err := makeNewEnv([]string{"a=b", "b=b"}, map[string]string{"b": "c", "d": "e"}, []string{"b"})
 		if err != nil {
-			t.Fatalf("failed err:%#v", err)
+			t.Errorf("failed err:%#v", err)
 		}
 		sort.Strings(env)
 		expect := []string{"a=b", "b=b", "b=c"}
 		sort.Strings(expect)
 		if !reflect.DeepEqual(env, expect) {
-			t.Fatalf("failed getEnv test expect: %#v, got: %#v", expect, env)
+			t.Errorf("failed getEnv test expect: %#v, got: %#v", expect, env)
 		}
 	})
 	t.Run("key does not exist in json", func(t *testing.T) {
