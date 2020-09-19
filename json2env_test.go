@@ -37,7 +37,7 @@ func TestRun(t *testing.T) {
 		}{
 			{
 				Title:       "if stdin is not json",
-				InputParams: []string{"-keys", "-envname", "TEST", "test", "ls"},
+				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
 				Stdin:       `{deadbeaf`,
 			},
 			{
@@ -52,7 +52,7 @@ func TestRun(t *testing.T) {
 			},
 			{
 				Title:       "if command arg not exists",
-				InputParams: []string{"-keys", "test"},
+				InputParams: []string{"-keys", "test", "-envname", "TEST"},
 				Stdin:       `{"test": "test"}`,
 			},
 			{
@@ -62,7 +62,7 @@ func TestRun(t *testing.T) {
 			},
 			{
 				Title:       "if keys option is not provided",
-				InputParams: []string{"ls"},
+				InputParams: []string{"-envname", "TEST", "ls"},
 				Stdin:       `{"test": "test"}`,
 			},
 		}
