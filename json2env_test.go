@@ -65,6 +65,11 @@ func TestRun(t *testing.T) {
 				InputParams: []string{"-envname", "TEST", "ls"},
 				Stdin:       `{"test": "test"}`,
 			},
+			{
+				Title:       "if envname option is not exists",
+				InputParams: []string{"-keys", "test", "ls"},
+				Stdin:       `{"test": "test"}`,
+			},
 		}
 		for _, pattern := range patterns {
 			os.Setenv("TEST", pattern.Stdin)
