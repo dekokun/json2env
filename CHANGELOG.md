@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.6](https://github.com/dekokun/json2env/compare/v0.0.4...v0.0.6) (2020-09-25)
+
+* add detailed error in absence of environment variable [#7](https://github.com/dekokun/json2env/pull/7) ([dekokun](https://github.com/dekokun))
+* Not use stdin for docker cmd [#6](https://github.com/dekokun/json2env/pull/6) ([dekokun](https://github.com/dekokun))
+
 ## [v0.0.5](https://github.com/dekokun/json2env/compare/v0.0.4...v0.0.5) (2020-09-19)
 
 * Not use stdin for docker cmd [#6](https://github.com/dekokun/json2env/pull/6) ([dekokun](https://github.com/dekokun))
