@@ -46,7 +46,7 @@ func TestRun(t *testing.T) {
 				InputJSON:   `{"test": {"test": "test"}}`,
 			},
 			{
-				Title:       "if the key in keys option is not exists in json",
+				Title:       "if the key in keys option not exists in json",
 				InputParams: []string{"-keys", "notExists", "-envname", "TEST", "ls"},
 				InputJSON:   `{"test": "test"}`,
 			},
@@ -66,7 +66,7 @@ func TestRun(t *testing.T) {
 				InputJSON:   `{"test": "test"}`,
 			},
 			{
-				Title:       "if envname option is not exists",
+				Title:       "if envname option not exists",
 				InputParams: []string{"-keys", "test", "ls"},
 				InputJSON:   `{"test": "test"}`,
 			},
@@ -76,7 +76,7 @@ func TestRun(t *testing.T) {
 				InputJSON:   "",
 			},
 			{
-				Title:       "if target env is not exist",
+				Title:       "if target env not exist",
 				InputParams: []string{"-keys", "test", "-envname", "DO NOT EXISTS", "ls"},
 				InputJSON:   "",
 			},
