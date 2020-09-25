@@ -36,12 +36,12 @@ func TestRun(t *testing.T) {
 			Stdin       string
 		}{
 			{
-				Title:       "if stdin is not json",
+				Title:       "if input is not json",
 				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
 				Stdin:       `{deadbeaf`,
 			},
 			{
-				Title:       "if stdin is nested json",
+				Title:       "if input is nested json",
 				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
 				Stdin:       `{"test": {"test": "test"}}`,
 			},
