@@ -70,6 +70,16 @@ func TestRun(t *testing.T) {
 				InputParams: []string{"-keys", "test", "ls"},
 				InputJSON:   `{"test": "test"}`,
 			},
+			{
+				Title:       "if target env is empty",
+				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
+				InputJSON:   "",
+			},
+			{
+				Title:       "if target env is not exist",
+				InputParams: []string{"-keys", "test", "-envname", "DO NOT EXISTS", "ls"},
+				InputJSON:   "",
+			},
 		}
 		for _, pattern := range patterns {
 			os.Setenv("TEST", pattern.InputJSON)

@@ -49,7 +49,13 @@ func Run(ctx context.Context, argv []string, outStream, errStream io.Writer, env
 		return errors.New("envname option is required")
 	}
 
-	inputJSON := os.Getenv(*envName)
+	inputJSON, ok := os.LookupEnv(*envName)
+	if !ok {
+		return fmt.Errorf("environment variable %s is not set", *envName)
+	}
+	if inputJSON == "" {
+		return fmt.Errorf("environment variable %s is empty", *envName)
+	}
 	var envJSON map[string]string
 	err := json.Unmarshal([]byte(inputJSON), &envJSON)
 	if err != nil {
