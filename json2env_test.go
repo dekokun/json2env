@@ -33,46 +33,46 @@ func TestRun(t *testing.T) {
 		patterns := []struct {
 			Title       string
 			InputParams []string
-			Stdin       string
+			InputJSON   string
 		}{
 			{
 				Title:       "if input is not json",
 				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
-				Stdin:       `{deadbeaf`,
+				InputJSON:   `{deadbeaf`,
 			},
 			{
 				Title:       "if input is nested json",
 				InputParams: []string{"-keys", "test", "-envname", "TEST", "ls"},
-				Stdin:       `{"test": {"test": "test"}}`,
+				InputJSON:   `{"test": {"test": "test"}}`,
 			},
 			{
 				Title:       "if the key in keys option is not exists in json",
 				InputParams: []string{"-keys", "notExists", "-envname", "TEST", "ls"},
-				Stdin:       `{"test": "test"}`,
+				InputJSON:   `{"test": "test"}`,
 			},
 			{
 				Title:       "if command arg not exists",
 				InputParams: []string{"-keys", "test", "-envname", "TEST"},
-				Stdin:       `{"test": "test"}`,
+				InputJSON:   `{"test": "test"}`,
 			},
 			{
 				Title:       "if command not exists in path",
 				InputParams: []string{"-keys", "test", "-envname", "TEST", "notExistsCommand"},
-				Stdin:       `{"test": "test"}`,
+				InputJSON:   `{"test": "test"}`,
 			},
 			{
 				Title:       "if keys option is not provided",
 				InputParams: []string{"-envname", "TEST", "ls"},
-				Stdin:       `{"test": "test"}`,
+				InputJSON:   `{"test": "test"}`,
 			},
 			{
 				Title:       "if envname option is not exists",
 				InputParams: []string{"-keys", "test", "ls"},
-				Stdin:       `{"test": "test"}`,
+				InputJSON:   `{"test": "test"}`,
 			},
 		}
 		for _, pattern := range patterns {
-			os.Setenv("TEST", pattern.Stdin)
+			os.Setenv("TEST", pattern.InputJSON)
 			err := Run(context.Background(), pattern.InputParams, &bytes.Buffer{}, &bytes.Buffer{}, []string{})
 			if err == nil {
 				t.Errorf("error not occurred, failed test.\n Test title: %s", pattern.Title)
