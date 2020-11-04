@@ -13,6 +13,8 @@ json2env
 
 json2env execute commands with environment variables made from JSON.
 
+Click here for an explanation in Japanese : https://dekotech.dekokun.info/entry/2020/10/04/162635
+
 ## Synopsis
 
 ```go
