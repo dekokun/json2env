@@ -42,7 +42,7 @@ And I made it mandatory to specify the name of the environment variable to use s
 ## Installation
 
 ```console
-$ go get github.com/dekokun/json2env/cmd/json2env
+$ go install github.com/dekokun/json2env/cmd/json2env
 ```
 
 ## Author
